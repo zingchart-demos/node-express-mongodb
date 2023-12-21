@@ -27,10 +27,14 @@ db.once('open', function(callback){
 	var aDocs = JSON.parse(fs.readFileSync('./test_data.json'));
 
 	// Loop through and add the sample dataset to the database
-	for (var n = 0; n < aDocs.length; n++){
-		var docToAdd = new Document(aDocs[n]);
-		docToAdd.save(function(err, docToAdd){
-			if (err) return console.error(err);
+	for (let n = 0; n < aDocs.length; n++){
+		Document.findOne({_id:aDocs[n]._id}).then(function(doc) {
+			if (!doc) {
+				var docToAdd = new Document(aDocs[n]);
+				docToAdd.save(function(err, _){
+					if (err) return console.error(err);
+				});
+			}
 		});
 	}
 });
